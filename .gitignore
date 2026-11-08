@@ -1,0 +1,6 @@
+bin/
+lib/
+obj/
+.git/
+.idea/
+UltraNightmare.sln.DotSettings.user
