@@ -154,6 +154,9 @@ public class Main : BaseUnityPlugin
                 
                 if (getSceneName().Contains("Level ") && RunManager.isInRun)
                 {
+                    //Disable any alt exits for the level we're currently in.
+                    CampaignPatches.Apply(getSceneName());
+                    
                     RunManager.hasSent = false;
                     Logging.Info("Fetching death markers for " + getSceneName());
                     
