@@ -23,3 +23,33 @@ namespace UltraNightmare.HarmonyPatches;
             }
         }
     }
+    
+    
+    [HarmonyPatch(typeof(CheatsController), "Start")]
+    public class ForceDisableKeepEnabledCheat
+    {
+        [HarmonyPrefix]
+        public static bool forceDisableKeepEnabeldCheat()
+        {
+            if (RunManager.isInRun)
+            {
+                MonoSingleton<PrefsManager>.Instance.SetBool("cheat.ultrakill.keep-enabled", false);
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(CheatsManager), "Start")]
+    public class RemoveCheatFlagInRun
+    {
+        [HarmonyPostfix]
+        public static void disableCheatFlagInBingo(CheatsManager __instance)
+        {
+            if(RunManager.isInRun)
+            {
+                MonoSingleton<AssistController>.Instance.cheatsEnabled = false;
+            }
+        }
+    }

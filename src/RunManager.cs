@@ -152,6 +152,9 @@ public static class RunManager
         PrepareSaveData();
         ResetStats();
         
+        //Force disable cheats when beginning a run.
+        MonoSingleton<AssistController>.Instance.cheatsEnabled = true;
+        
         isInRun = true;
         SceneHelper.LoadScene("Level 0-1");
     }
