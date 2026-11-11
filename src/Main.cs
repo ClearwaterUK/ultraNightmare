@@ -173,9 +173,9 @@ public class Main : BaseUnityPlugin
                         
                         // Display death marker data
                         GetGameObjectChild(DeathMarker, "Data").GetComponent<TextMeshPro>().text =
-                            death.steamId + "\n"
-                                          + DateTimeOffset.Parse(death.deathDate).ToString("yyyy-MM-dd HH:mm:ss") + "\n"
-                                          + (death.killedBy != "" ? ("Killed by: "+ death.killedBy) : "");
+                            death.steamUsername + "\n" 
+                           + DateTimeOffset.Parse(death.deathDate).ToString("yyyy-MM-dd HH:mm:ss") + "\n"
+                           + (death.killedBy != "" ? ("Killed by: "+ death.killedBy) : "");
                     }
 
                     // Set up damage/death tracking (cheers Flazhik <3 )

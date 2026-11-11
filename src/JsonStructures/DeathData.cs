@@ -10,4 +10,5 @@ public class DeathData
     public string levelId;
     public string deathDate;
     public string killedBy;
+    public string steamUsername;
 }
