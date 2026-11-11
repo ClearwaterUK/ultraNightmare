@@ -23,7 +23,7 @@ public class Main : BaseUnityPlugin
     public const string pluginName = "UltraNIGHTMARE";
     public const string pluginVersion = "1.1.0";
 
-    public const bool isDevelopmentBuild = true;
+    public const bool isDevelopmentBuild = false;
     
     public static string ModFolder => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
