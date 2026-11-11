@@ -21,7 +21,7 @@ public class Main : BaseUnityPlugin
 {
     public const string pluginId = "clearwater.ultranightmare.ultranightmare";
     public const string pluginName = "UltraNIGHTMARE";
-    public const string pluginVersion = "1.0.0";
+    public const string pluginVersion = "1.1.0";
 
     public const bool isDevelopmentBuild = true;
     
