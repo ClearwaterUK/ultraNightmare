@@ -9,4 +9,5 @@ public class DeathData
     public string steamId;
     public string levelId;
     public string deathDate;
+    public string killedBy;
 }

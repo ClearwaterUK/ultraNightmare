@@ -48,6 +48,7 @@ public static class RunManager
     public static int runStylePoints = 0;
     public static Vector3 currentGroundPosition = Vector3.zero;
     public static Vector3 currentGroundRotation = Vector3.zero;
+    public static string lastHitBy = "";
 
     public static SaveTypeEnum saveType = SaveTypeEnum.PER_LAYER;
 
@@ -375,7 +376,8 @@ public static class RunManager
                 { "levelId", SceneHelper.CurrentScene },
                 { "deathDate", ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds().ToString()},
                 { "difficulty", MonoSingleton<PrefsManager>.Instance.GetInt("difficulty").ToString()},
-                { "radiance", enemyRadianceLevel.ToString()}
+                { "radiance", enemyRadianceLevel.ToString()},
+                { "killedBy", lastHitBy}
             };
             var encodedContent = new FormUrlEncodedContent(content);
             DateTimeOffset.UtcNow.ToUnixTimeSeconds();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BepInEx;
 using HarmonyLib;
 using TMPro;
+using UKEnemyIdentifier.Components;
 using UltraNightmare;
 using UltraNightmare.JsonStructures;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class Main : BaseUnityPlugin
     public const string pluginName = "UltraNIGHTMARE";
     public const string pluginVersion = "1.0.0";
 
-    public const bool isDevelopmentBuild = false;
+    public const bool isDevelopmentBuild = true;
     
     public static string ModFolder => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -170,13 +171,34 @@ public class Main : BaseUnityPlugin
                         DeathMarker.AddComponent<AlwaysLookAtCamera>();
                         DeathMarker.transform.localPosition = new Vector3(death.x,death.y,death.z);
                         
-                        //TODO: Look into this library for tracking what enemy killed the player so it can be added to death marker data
-                        // https://github.com/Flazhik/CybergrindDeathcam
+                        // Display death marker data
                         GetGameObjectChild(DeathMarker, "Data").GetComponent<TextMeshPro>().text =
                             death.steamId + "\n"
-                                          + DateTimeOffset.Parse(death.deathDate).ToString("yyyy-MM-dd HH:mm:ss") + "\n";
-                                          //+ "Killed by ENEMY" + "\n";
+                                          + DateTimeOffset.Parse(death.deathDate).ToString("yyyy-MM-dd HH:mm:ss") + "\n"
+                                          + (death.killedBy != "" ? ("Killed by: "+ death.killedBy) : "");
                     }
+
+                    // Set up damage/death tracking (cheers Flazhik <3 )
+                    EnemyIdentifierManager.Instance.OnPlayerHurt += hurtEvent =>
+                    {
+                        if (hurtEvent.EnemyId != null)
+                        {
+                            RunManager.lastHitBy = hurtEvent.EnemyId.FullName;
+                        }
+
+                        if (hurtEvent.PlayerIsKilled)
+                        {
+                            if (hurtEvent.EnemyId != null)
+                            {
+                                RunManager.lastHitBy = hurtEvent.EnemyId.FullName;
+                            }
+                            else
+                            {
+                                Logging.Warn("Unable to ascertain what killed the player! Setting death to unknown");
+                                RunManager.lastHitBy = "Unknown";
+                            }
+                        }
+                    };
 
                 }
                 break;
