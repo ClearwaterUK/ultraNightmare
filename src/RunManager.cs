@@ -8,6 +8,7 @@ using UltraNightmare.JsonStructures;
 using UnityEngine;
 
 using System.Linq;
+using BepInEx.Configuration;
 using UltraNightmare.UIComponents;
 using UnityEngine.SceneManagement;
 
@@ -62,6 +63,10 @@ public static class RunManager
     public static string deaths = "deaths/";
     public static string registerCompletedRun = "registerCompletedRun/";
     public static string registerDeath = "registerDeath/";
+    
+    //Config
+    public static ConfigEntry<string> sendDeathMarkers;
+    public static ConfigEntry<string> showDeathMarkers;
 
     public static string getSaveTypeString(SaveTypeEnum saveType)
     {

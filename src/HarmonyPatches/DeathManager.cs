@@ -16,7 +16,10 @@ public static class PrepareDeathScreen
         if (RunManager.isInRun)
         {
             RunManager.WipeSaveData();
-            RunManager.SendDeathToServer();
+            if (RunManager.sendDeathMarkers.Value == "true")
+            {
+                RunManager.SendDeathToServer();
+            }
             
             GameObject deathScreen = GetGameObjectChild(GetGameObjectChild(GetInactiveRootObject("Canvas"), "BlackScreen"), "YouDiedText");
             //Need to disable the TextOverride component.

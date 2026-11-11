@@ -37,6 +37,11 @@ public class Main : BaseUnityPlugin
         Harmony harmony = new Harmony(pluginId);
         harmony.PatchAll();
         
+        Logging.Message("--Loading config...--");
+        RunManager.sendDeathMarkers =  Config.Bind("UltraNightmareConfig","sendDeathMarkers","true","Allow your deaths to be uploaded to the server as death markers for others to see.");
+        RunManager.showDeathMarkers =  Config.Bind("UltraNightmareConfig","showDeathMarkers","true","Display death markers of other players.");
+
+        
         Logging.Message("--Done. The torment has begun...--");
         SceneManager.sceneLoaded += onSceneLoaded;
     }
@@ -159,24 +164,28 @@ public class Main : BaseUnityPlugin
                     CampaignPatches.Apply(getSceneName());
                     
                     RunManager.hasSent = false;
-                    Logging.Info("Fetching death markers for " + getSceneName());
                     
                     // Fetch death markers for both the player and a random handful of other player death markers and put them in the level
-                    List<DeathData> deaths = await RunManager.GetDeaths();
-                    foreach (DeathData death in deaths)
+                    Logging.Info("Fetching death markers for " + getSceneName());
+                    if (RunManager.showDeathMarkers.Value == "true")
                     {
-                        GameObject DeathMarker = GameObject.Instantiate(AssetLoader.DeathMarker);
-                        GetGameObjectChild(DeathMarker, "Data").AddComponent<AlwaysLookAtCamera>();
-                        GetGameObjectChild(DeathMarker,"Data").transform.localScale = new Vector3(-1f, 1f, 1f);
-                        DeathMarker.AddComponent<AlwaysLookAtCamera>();
-                        DeathMarker.transform.localPosition = new Vector3(death.x,death.y,death.z);
+                        List<DeathData> deaths = await RunManager.GetDeaths();
+                        foreach (DeathData death in deaths)
+                        {
+                            GameObject DeathMarker = GameObject.Instantiate(AssetLoader.DeathMarker);
+                            GetGameObjectChild(DeathMarker, "Data").AddComponent<AlwaysLookAtCamera>();
+                            GetGameObjectChild(DeathMarker,"Data").transform.localScale = new Vector3(-1f, 1f, 1f);
+                            DeathMarker.AddComponent<AlwaysLookAtCamera>();
+                            DeathMarker.transform.localPosition = new Vector3(death.x,death.y,death.z);
                         
-                        // Display death marker data
-                        GetGameObjectChild(DeathMarker, "Data").GetComponent<TextMeshPro>().text =
-                            death.steamUsername + "\n" 
-                           + DateTimeOffset.Parse(death.deathDate).ToString("yyyy-MM-dd HH:mm:ss") + "\n"
-                           + (death.killedBy != "" ? ("Killed by: "+ death.killedBy) : "");
+                            // Display death marker data
+                            GetGameObjectChild(DeathMarker, "Data").GetComponent<TextMeshPro>().text =
+                                death.steamUsername + "\n" 
+                                                    + DateTimeOffset.Parse(death.deathDate).ToString("yyyy-MM-dd HH:mm:ss") + "\n"
+                                                    + (death.killedBy != "" ? ("Killed by: "+ death.killedBy) : "");
+                        }
                     }
+
 
                     // Set up damage/death tracking (cheers Flazhik <3 )
                     EnemyIdentifierManager.Instance.OnPlayerHurt += hurtEvent =>
